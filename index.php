@@ -14,13 +14,13 @@
         if ($no===0):
     ?> 
           <div class="carousel-item active">
-            <?php the_post_thumbnail( "small_tumb", array("class" => "card-img-top img-thumbnail d-block w-100")) ?>
+            <?php the_post_thumbnail( "small_tumb", array("class" => "card-img-top img-carousel img-thumbnail d-block w-100")) ?>
           </div>
     <?php
         else:
     ?>
           <div class="carousel-item">
-            <?php the_post_thumbnail( "small_tumb", array("class" => "card-img-top img-thumbnail d-block w-100")) ?>
+            <?php the_post_thumbnail( "small_tumb", array("class" => "card-img-top img-carousel img-thumbnail d-block w-100")) ?>
           </div>
           <?php
         endif;
@@ -84,25 +84,45 @@
                 endwhile;
                 ?>
                 </div>
-                <ul>
-                    <?php foreach( wpdocs_get_paginated_links( $query ) as $link ) : ?>
-                    <li>
-                        <?php if ( $link->isCurrent ): ?>
-                            <strong><?php _e( $link->page ) ?></strong>
-                        <?php else : ?>
-                            <a href="<?php esc_attr_e( $link->url ) ?>">
-                                <?php _e( $link->page ) ?>
-                            </a>
-                        <?php endif; ?>
-                    </li>
-                    <?php endforeach; ?>
-                </ul
+                <nav aria-label="Page navigation example">
                 <?php
-                //echo paginate_links( );
+                
+                $links = paginate_links( array(
+                  'prev_next'          => false,
+                  'type'               => 'array'
+                ) );
+
+                if ( $links ) :
+
+                    echo '<ul class="pagination">';
+
+                    // get_previous_posts_link will return a string or void if no link is set.
+                    if ( $prev_posts_link = get_previous_posts_link( __( 'Previous Page' ) ) ) :
+                        echo '<li class="page-item">';
+                        echo $prev_posts_link;
+                        echo '</li>';
+                    endif;
+
+                    echo '<li class="page-item">';
+                    echo join( '</li><li class="page-item">', $links );
+                    echo '</li>';
+
+                    // get_next_posts_link will return a string or void if no link is set.
+                    if ( $next_posts_link = get_next_posts_link( __( 'Next Page' ) ) ) :
+                        echo '<li class="page-item">';
+                        echo $next_posts_link;
+                        echo '</li>';
+                    endif;
+                    echo '</ul>';
+                endif;
+                
+                ?>
+                </nav>
+                <?php
             else:
                 echo "Tidak ada post";
                 ?>
-                </div>
+            </div>
                 <?php
             endif;
             ?>
